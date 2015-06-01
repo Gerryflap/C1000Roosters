@@ -70,6 +70,11 @@ public class WerkdagAdapter extends BaseAdapter {
             ((TextView)holder.view.findViewById(R.id.start)).setText("Van: " + mData.get(position).getStart());
             ((TextView)holder.view.findViewById(R.id.end)).setText("Tot: " + mData.get(position).getEind());
             ((TextView)holder.view.findViewById(R.id.pauze)).setText("Pauze: " + mData.get(position).getPauze());
+            if(position%2 == 0) {
+                holder.view.setBackgroundColor(0xFFFFAAAA);
+            } else {
+                holder.view.setBackgroundColor(0xFFFF8888);
+            }
             return convertView;
         }
 
