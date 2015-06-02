@@ -178,8 +178,6 @@ public class C1000Login {
 
             }
 
-            //TODO: Remove test elements
-            werkdagen.add(new Werkdag("Gerbendag", "(31-feb)", "13:00", "13:01", "00:45"));
             return werkdagen;
         } catch (IOException e) {
             e.printStackTrace();
