@@ -1,8 +1,10 @@
 package nl.gerben_meijer.gerryflap.c1000roosters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -11,12 +13,15 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toolbar;
+
+import java.text.AttributedCharacterIterator;
 
 import nl.gerben_meijer.gerryflap.c1000roosters.C1000.C1000Login;
 import nl.gerben_meijer.gerryflap.c1000roosters.C1000.Werkdag;
 
 
-public class RoosterActivity extends ActionBarActivity {
+public class RoosterActivity extends Activity {
     private WerkdagAdapter adapter;
     private C1000Login login;
 
@@ -24,7 +29,6 @@ public class RoosterActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rooster);
-
 
 
         ListView dagen = (ListView) this.findViewById(R.id.list);
