@@ -12,7 +12,7 @@ import android.widget.ListView;
 import nl.gerben_meijer.gerryflap.c1000roosters.C1000.C1000Login;
 
 
-public class SettingsActivity extends Activity {
+public class SettingsActivity extends ActionBarActivity {
     C1000Login login;
 
 

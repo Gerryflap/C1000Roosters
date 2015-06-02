@@ -21,7 +21,7 @@ import nl.gerben_meijer.gerryflap.c1000roosters.C1000.C1000Login;
 import nl.gerben_meijer.gerryflap.c1000roosters.C1000.Werkdag;
 
 
-public class RoosterActivity extends Activity {
+public class RoosterActivity extends ActionBarActivity {
     private WerkdagAdapter adapter;
     private C1000Login login;
 
