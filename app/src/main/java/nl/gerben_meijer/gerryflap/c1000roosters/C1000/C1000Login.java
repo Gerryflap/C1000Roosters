@@ -10,6 +10,7 @@ import org.jsoup.select.Elements;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,15 +22,39 @@ import java.util.regex.Pattern;
  * Created by Gerryflap on 2015-05-30.
  */
 public class C1000Login {
+    public static final int STATUS_LOGGED_OUT = 0;
+    public static final int STATUS_LOGGIN_IN = 1;
+    public static final int STATUS_LOGGED_IN_NO_ID = 2;
+    public static final int STATUS_LOGGED_IN_WITH_ID = 3;
+    public static final int STATUS_LOADING_SCHEDULE = 4;
+    public static final int STATUS_SHEDULE_LOADED = 5;
+    public static final int STATUS_LOADING_FAILED = 6;
+
+    public static final Map<Integer, String> statusStrings;
+    static {
+        Map<Integer, String> aMap = new HashMap<>();
+        aMap.put(STATUS_LOGGED_OUT, "Not logged in");
+        aMap.put(STATUS_LOGGIN_IN, "Loggin in");
+        aMap.put(STATUS_LOGGED_IN_NO_ID, "Logged in, waiting for account id");
+        aMap.put(STATUS_LOGGED_IN_WITH_ID, "Logged in");
+        aMap.put(STATUS_LOADING_SCHEDULE, "Loading schedule");
+        aMap.put(STATUS_SHEDULE_LOADED, "Schedule loaded");
+        aMap.put(STATUS_LOADING_FAILED, "Loading failed!");
+        statusStrings = Collections.unmodifiableMap(aMap);
+    }
+
+
     Map<String, String> cookies;
     private String accountId;
     private String session;
+    private int status = STATUS_LOGGED_OUT;
     private boolean loggedIn = false;
 
 
     public C1000Login(String session){
         cookies = new HashMap<>();
         cookies.put("pmt_real_session", session);
+        status = STATUS_LOGGIN_IN;
     }
 
     public C1000Login(){
@@ -37,12 +62,15 @@ public class C1000Login {
     }
 
     public void login(String username, String password) {
+        status = STATUS_LOGGIN_IN;
         Connection.Response response = getSite(true);
         if(response != null) {
             String out = postData(getToken(response), username, password);
             System.out.println(cookies);
             session = cookies.get("pmt_real_session");
+            status = STATUS_LOGGED_IN_NO_ID;
         }
+        status = STATUS_LOGGED_OUT;
     }
 
     public Connection.Response getSite(boolean setCookies){
@@ -94,35 +122,40 @@ public class C1000Login {
     }
 
     public List<Werkdag> getWeek(){
+        status = STATUS_LOADING_SCHEDULE;
         ArrayList<Werkdag> werkdagen = new ArrayList<Werkdag>();
+        if(loggedIn) {
 
-        try {
-            Document document = Jsoup.connect("https://www.c1000net.nl/steenwijk/employeeweekschedule").cookies(cookies).get();
-            if(accountId == null){
-                Pattern pattern = Pattern.compile("\"account_id\": ([0-9]*)");
-                Matcher m = pattern.matcher(document.toString());
-                if(m.find()) {
-                    accountId = m.group(1);
-                    System.out.println(accountId);
-                }
-            }
-            Elements table = document.getElementsByTag("table");
-            Elements column;
-            for (Element tbody: table.select("tbody")){
-                column = tbody.select("td");
-                try {
-                    if (!column.get(0).html().equals("-") && !tbody.select("th").get(0).html().equals("Definitief")) {
-                        werkdagen.add(new Werkdag(tbody.select("th").get(0).html(), tbody.select("th").get(1).html(), column.get(0).html(), column.get(1).html(), column.get(2).html()));
+            try {
+                Document document = Jsoup.connect("https://www.c1000net.nl/steenwijk/employeeweekschedule").cookies(cookies).get();
+                if (accountId == null) {
+                    Pattern pattern = Pattern.compile("\"account_id\": ([0-9]*)");
+                    Matcher m = pattern.matcher(document.toString());
+                    if (m.find()) {
+                        accountId = m.group(1);
+                        System.out.println(accountId);
                     }
-                } catch (IndexOutOfBoundsException e){
-                    e.printStackTrace();
                 }
+                Elements table = document.getElementsByTag("table");
+                Elements column;
+                for (Element tbody : table.select("tbody")) {
+                    column = tbody.select("td");
+                    try {
+                        if (!column.get(0).html().equals("-") && !tbody.select("th").get(0).html().equals("Definitief")) {
+                            werkdagen.add(new Werkdag(tbody.select("th").get(0).html(), tbody.select("th").get(1).html(), column.get(0).html(), column.get(1).html(), column.get(2).html()));
+                        }
+                    } catch (IndexOutOfBoundsException e) {
+                        e.printStackTrace();
+                    }
 
+                }
+                status = STATUS_SHEDULE_LOADED;
+                return werkdagen;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            return werkdagen;
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        status = STATUS_LOADING_FAILED;
         return null;
     }
 
@@ -172,5 +205,13 @@ public class C1000Login {
 
     public boolean isLoggedIn() {
         return loggedIn;
+    }
+
+    public int getStatus(){
+        return status;
+    }
+
+    public String getStatusString(){
+        return statusStrings.get(status);
     }
 }

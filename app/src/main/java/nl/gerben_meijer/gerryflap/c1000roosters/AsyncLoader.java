@@ -41,6 +41,10 @@ public class AsyncLoader extends AsyncTask<WerkdagAdapter, Object, List<Werkdag>
     }
 
     protected void onPostExecute(List<Werkdag> result) {
+        TextView status = (TextView) activity.findViewById(R.id.statusView);
+        if(status != null){
+            status.setText(c1000Login.getStatusString());
+        }
         params.clear();
         params.addAll(result);
         params.notifyDataSetChanged();

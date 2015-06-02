@@ -73,6 +73,11 @@ public class AsyncLogin extends AsyncTask<Void, Object, Boolean>{
     }
 
     protected void onPostExecute(Boolean result) {
+        TextView status = (TextView) activity.findViewById(R.id.statusView);
+        if(status != null){
+            status.setText(c1000Login.getStatusString());
+        }
+
         if(!load && result){
             SharedPreferences sharedPreferences = activity.getSharedPreferences("nl.gerben_meijer.gerryflap.c1000roosters", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -80,9 +85,6 @@ public class AsyncLogin extends AsyncTask<Void, Object, Boolean>{
             editor.putString("password", password);
             editor.apply();
 
-            if(activity instanceof SettingsActivity){
-                ((TextView) activity.findViewById(R.id.statusView)).setText("You are logged in");
-            }
         }
 
         if (load && result){
@@ -91,9 +93,6 @@ public class AsyncLogin extends AsyncTask<Void, Object, Boolean>{
                 loader.execute(((RoosterActivity) activity).getAdapter());
             }
 
-            if(activity instanceof SettingsActivity){
-                ((TextView) activity.findViewById(R.id.statusView)).setText("You are logged in");
-            }
         }
 
         if(!result){

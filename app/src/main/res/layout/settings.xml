@@ -63,7 +63,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="You are not logged in"
+        android:text="Status"
         android:id="@+id/statusView"
         android:layout_gravity="center_horizontal"
         android:textColor="#FFAAAAAA" />
