@@ -13,9 +13,6 @@ public class LoginOnClickListener implements View.OnClickListener {
 
     public LoginOnClickListener(SettingsActivity activity) {
         this.activity = activity;
-        if(this.activity.getLogin() != null){
-            ((TextView) activity.findViewById(R.id.statusView)).setText("You are logged in");
-        }
     }
 
     @Override
