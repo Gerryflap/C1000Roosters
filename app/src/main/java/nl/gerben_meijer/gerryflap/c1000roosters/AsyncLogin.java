@@ -46,6 +46,10 @@ public class AsyncLogin extends AsyncTask<Void, Object, Boolean>{
 
     protected Boolean doInBackground(Void... params) {
         this.c1000Login.login(username, password);
+        boolean loggedIn = c1000Login.isLoggedIn();
+        if(!loggedIn){
+            return false;
+        }
         String accountId = null;
         if(load) {
             SharedPreferences sharedPreferences = activity.getSharedPreferences("nl.gerben_meijer.gerryflap.c1000roosters", Context.MODE_PRIVATE);

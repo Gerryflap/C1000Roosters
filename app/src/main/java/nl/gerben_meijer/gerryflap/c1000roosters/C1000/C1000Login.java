@@ -24,6 +24,7 @@ public class C1000Login {
     Map<String, String> cookies;
     private String accountId;
     private String session;
+    private boolean loggedIn = false;
 
 
     public C1000Login(String session){
@@ -37,9 +38,11 @@ public class C1000Login {
 
     public void login(String username, String password) {
         Connection.Response response = getSite(true);
-        String out = postData(getToken(response), username, password);
-        System.out.println(cookies);
-        session = cookies.get("pmt_real_session");
+        if(response != null) {
+            String out = postData(getToken(response), username, password);
+            System.out.println(cookies);
+            session = cookies.get("pmt_real_session");
+        }
     }
 
     public Connection.Response getSite(boolean setCookies){
@@ -81,6 +84,7 @@ public class C1000Login {
                     .execute();
             Document doc = response.parse();
             cookies = response.cookies();
+            loggedIn = doc.getElementsByTag("form").size() == 0;
 
             return doc.toString();
         } catch (IOException e) {
@@ -164,5 +168,9 @@ public class C1000Login {
 
     public String getSession() {
         return session;
+    }
+
+    public boolean isLoggedIn() {
+        return loggedIn;
     }
 }

@@ -41,6 +41,15 @@ public class RoosterActivity extends ActionBarActivity {
     }
 
 
+    public void onResume(){
+        super.onResume();
+        if(login.isLoggedIn()){
+            (new AsyncLoader(login, this)).execute(adapter);
+        } else {
+            (new AsyncLogin(this, login)).execute();
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

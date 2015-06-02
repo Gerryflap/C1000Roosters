@@ -41,6 +41,7 @@ public class AsyncLoader extends AsyncTask<WerkdagAdapter, Object, List<Werkdag>
     }
 
     protected void onPostExecute(List<Werkdag> result) {
+        params.clear();
         params.addAll(result);
         params.notifyDataSetChanged();
     }

@@ -81,6 +81,10 @@ public class WerkdagAdapter extends BaseAdapter {
             return convertView;
         }
 
+    public void clear() {
+        this.mData.clear();
+    }
+
     public class ViewHolder{
         public LinearLayout view;
     }
