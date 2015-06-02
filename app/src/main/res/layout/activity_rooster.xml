@@ -18,8 +18,8 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/statusView"
         android:text="Status"
+        android:textColor="#FFAAAAAA"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:textColor="#FFAAAAAA" />
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
