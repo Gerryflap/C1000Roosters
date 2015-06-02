@@ -38,8 +38,8 @@ public class C1000Login {
         aMap.put(STATUS_LOGGED_IN_NO_ID, "Logged in, waiting for account id");
         aMap.put(STATUS_LOGGED_IN_WITH_ID, "Logged in");
         aMap.put(STATUS_LOADING_SCHEDULE, "Loading schedule");
-        aMap.put(STATUS_SHEDULE_LOADED, "Schedule loaded");
-        aMap.put(STATUS_LOADING_FAILED, "Loading failed!");
+        aMap.put(STATUS_SHEDULE_LOADED, "Logged in, Schedule loaded");
+        aMap.put(STATUS_LOADING_FAILED, "Loading schedule failed!");
         statusStrings = Collections.unmodifiableMap(aMap);
     }
 
