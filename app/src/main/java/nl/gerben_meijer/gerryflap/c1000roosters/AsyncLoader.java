@@ -1,15 +1,10 @@
 package nl.gerben_meijer.gerryflap.c1000roosters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.AsyncTask;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -21,18 +16,28 @@ import nl.gerben_meijer.gerryflap.c1000roosters.data.DatabaseCommunicator;
  * Created by Gerryflap on 2015-05-30.
  */
 public class AsyncLoader extends AsyncTask<WerkdagAdapter, Object, List<Werkdag>>{
+    private SwipeRefreshLayout layout;
     WerkdagAdapter params;
     C1000Login c1000Login;
     Activity activity;
 
-    public AsyncLoader(C1000Login c1000Login, Activity activity){
+    public AsyncLoader(RoosterActivity activity, C1000Login c1000Login){
         this.c1000Login = c1000Login;
         this.activity = activity;
     }
 
+    public AsyncLoader(RoosterActivity roosterActivity, C1000Login login, SwipeRefreshLayout layout) {
+        this(roosterActivity, login);
+        this.layout = layout;
+    }
+
     public void onPreExecute(){
         TextView status = (TextView) activity.findViewById(R.id.statusView);
+
         if(status != null){
+            if(c1000Login.getStatus() != C1000Login.STATUS_LOGGED_OUT){
+                c1000Login.setStatus(C1000Login.STATUS_LOADING_SCHEDULE);
+            }
             status.setText(c1000Login.getStatusString());
         }
     }
@@ -65,8 +70,13 @@ public class AsyncLoader extends AsyncTask<WerkdagAdapter, Object, List<Werkdag>
         if(status != null){
             status.setText(c1000Login.getStatusString());
         }
+        System.out.println(layout);
+        if (layout != null){
+            layout.setRefreshing(false);
+        }
         params.clear();
         params.addAll(result);
         params.notifyDataSetChanged();
+
     }
 }

@@ -1,28 +1,18 @@
 package nl.gerben_meijer.gerryflap.c1000roosters;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toolbar;
-
-import java.text.AttributedCharacterIterator;
 
 import nl.gerben_meijer.gerryflap.c1000roosters.C1000.C1000Login;
-import nl.gerben_meijer.gerryflap.c1000roosters.C1000.Werkdag;
 import nl.gerben_meijer.gerryflap.c1000roosters.data.DatabaseCommunicator;
 
 
-public class RoosterActivity extends ActionBarActivity {
+public class RoosterActivity extends ActionBarActivity implements SwipeRefreshLayout.OnRefreshListener {
     private WerkdagAdapter adapter;
     private C1000Login login;
 
@@ -35,6 +25,7 @@ public class RoosterActivity extends ActionBarActivity {
         ListView dagen = (ListView) this.findViewById(R.id.list);
         adapter = new WerkdagAdapter(this);
         dagen.setAdapter(adapter);
+        ((SwipeRefreshLayout) findViewById(R.id.refresh)).setOnRefreshListener(this);
 
 
         if(savedInstanceState == null || savedInstanceState.getString("session") == null) {
@@ -105,5 +96,16 @@ public class RoosterActivity extends ActionBarActivity {
 
     public C1000Login getLogin() {
         return login;
+    }
+
+    @Override
+    public void onRefresh() {
+        if(login.isLoggedIn()){
+            AsyncLoader asyncLoader = new AsyncLoader(this, login, (SwipeRefreshLayout) this.findViewById(R.id.refresh));
+            asyncLoader.execute(adapter);
+        } else {
+            AsyncLogin asyncLogin = new AsyncLogin(this, login, (SwipeRefreshLayout) this.findViewById(R.id.refresh));
+            asyncLogin.execute();
+        }
     }
 }

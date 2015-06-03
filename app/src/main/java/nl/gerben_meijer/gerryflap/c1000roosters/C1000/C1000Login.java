@@ -230,4 +230,8 @@ public class C1000Login {
     public List<Werkdag> getWerkdagList() {
         return werkdagList;
     }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 }

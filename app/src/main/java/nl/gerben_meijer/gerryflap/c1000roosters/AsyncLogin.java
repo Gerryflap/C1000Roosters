@@ -6,25 +6,26 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import nl.gerben_meijer.gerryflap.c1000roosters.C1000.C1000Login;
-import nl.gerben_meijer.gerryflap.c1000roosters.C1000.Werkdag;
 
 /**
  * Created by Gerryflap on 2015-05-30.
  */
 public class AsyncLogin extends AsyncTask<Void, Object, Boolean>{
+    private SwipeRefreshLayout layout;
     String username;
     String password;
     C1000Login c1000Login;
     Activity activity;
     boolean load;
+
+    public AsyncLogin(Activity activity, C1000Login login, SwipeRefreshLayout layout){
+        this(activity, login);
+        this.layout = layout;
+    }
 
     public AsyncLogin(Activity activity, C1000Login c1000Login){
         this.c1000Login = c1000Login;
@@ -96,7 +97,7 @@ public class AsyncLogin extends AsyncTask<Void, Object, Boolean>{
 
         if (load && result){
             if(activity instanceof RoosterActivity){
-                AsyncLoader loader = new AsyncLoader(c1000Login, activity);
+                AsyncLoader loader = new AsyncLoader((RoosterActivity) activity, c1000Login, layout);
                 loader.execute(((RoosterActivity) activity).getAdapter());
             }
 
