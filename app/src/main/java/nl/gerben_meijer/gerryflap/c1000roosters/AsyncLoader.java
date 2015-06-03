@@ -15,6 +15,7 @@ import java.util.List;
 
 import nl.gerben_meijer.gerryflap.c1000roosters.C1000.C1000Login;
 import nl.gerben_meijer.gerryflap.c1000roosters.C1000.Werkdag;
+import nl.gerben_meijer.gerryflap.c1000roosters.data.DatabaseCommunicator;
 
 /**
  * Created by Gerryflap on 2015-05-30.
@@ -39,11 +40,14 @@ public class AsyncLoader extends AsyncTask<WerkdagAdapter, Object, List<Werkdag>
 
     protected List<Werkdag> doInBackground(WerkdagAdapter[] params) {
         this.params = params[0];
-
         List<Werkdag> werkdagen = c1000Login.getWeek();
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7 );
         werkdagen.addAll(c1000Login.getWeek(calendar.get(Calendar.WEEK_OF_YEAR), calendar.get(Calendar.YEAR)));
+        DatabaseCommunicator.getInstance().clear();
+        for(Werkdag werkdag: werkdagen) {
+            DatabaseCommunicator.getInstance().insertWerkdag(werkdag);
+        }
 
         return werkdagen;
     }

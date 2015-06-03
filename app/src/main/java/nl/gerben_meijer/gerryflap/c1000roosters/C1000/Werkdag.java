@@ -41,4 +41,5 @@ public class Werkdag {
     public String toString(){
         return String.format("%s%s \nstart: %s eind: %s pauze: %s", dag, datum, start, eind, pauze);
     }
+
 }

@@ -19,6 +19,7 @@ import java.text.AttributedCharacterIterator;
 
 import nl.gerben_meijer.gerryflap.c1000roosters.C1000.C1000Login;
 import nl.gerben_meijer.gerryflap.c1000roosters.C1000.Werkdag;
+import nl.gerben_meijer.gerryflap.c1000roosters.data.DatabaseCommunicator;
 
 
 public class RoosterActivity extends ActionBarActivity {
@@ -30,7 +31,7 @@ public class RoosterActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rooster);
 
-
+        new DatabaseCommunicator(this);
         ListView dagen = (ListView) this.findViewById(R.id.list);
         adapter = new WerkdagAdapter(this);
         dagen.setAdapter(adapter);
