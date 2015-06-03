@@ -44,6 +44,13 @@ public class AsyncLogin extends AsyncTask<Void, Object, Boolean>{
         load = false;
     }
 
+    public void onPreExecute(){
+        TextView status = (TextView) activity.findViewById(R.id.statusView);
+        if(status != null){
+            status.setText(c1000Login.getStatusString());
+        }
+    }
+
     protected Boolean doInBackground(Void... params) {
         this.c1000Login.login(username, password);
         boolean loggedIn = c1000Login.isLoggedIn();

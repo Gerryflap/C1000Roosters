@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import nl.gerben_meijer.gerryflap.c1000roosters.C1000.C1000Login;
 
@@ -25,8 +26,16 @@ public class SettingsActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
         String session = extras.getString("session");
+        String accountId = extras.getString("accountId");
+
         login = new C1000Login(session);
+        login.setAccountId(accountId);
+
         setContentView(R.layout.settings);
+        TextView status = (TextView) findViewById(R.id.statusView);
+        if(status != null){
+            status.setText(login.getStatusString());
+        }
 
         LoginOnClickListener loginOnClickListener = new LoginOnClickListener(this);
         this.findViewById(R.id.button).setOnClickListener(loginOnClickListener);

@@ -34,7 +34,7 @@ public class C1000Login {
     static {
         Map<Integer, String> aMap = new HashMap<>();
         aMap.put(STATUS_LOGGED_OUT, "Not logged in");
-        aMap.put(STATUS_LOGGIN_IN, "Loggin in");
+        aMap.put(STATUS_LOGGIN_IN, "Logging in");
         aMap.put(STATUS_LOGGED_IN_NO_ID, "Logged in, waiting for account id");
         aMap.put(STATUS_LOGGED_IN_WITH_ID, "Logged in");
         aMap.put(STATUS_LOADING_SCHEDULE, "Loading schedule");
@@ -54,7 +54,9 @@ public class C1000Login {
     public C1000Login(String session){
         cookies = new HashMap<>();
         cookies.put("pmt_real_session", session);
-        status = STATUS_LOGGIN_IN;
+        this.session = session;
+        loggedIn = true;
+        status = STATUS_LOGGED_IN_NO_ID;
     }
 
     public C1000Login(){
@@ -69,10 +71,10 @@ public class C1000Login {
             System.out.println(cookies);
             session = cookies.get("pmt_real_session");
             status = STATUS_LOGGED_IN_NO_ID;
+            return;
         }
         status = STATUS_LOGGED_OUT;
     }
-
     public Connection.Response getSite(boolean setCookies){
         try {
             Connection.Response res = Jsoup.connect("https://www.c1000net.nl/steenwijk")
@@ -107,7 +109,7 @@ public class C1000Login {
             Connection.Response response = Jsoup.connect("https://www.c1000net.nl/steenwijk/login").data("login[_csrf_token]", token,
                     "login[username]", email,
                     "login[password]", password)
-                    .cookies(cookies)
+                   .cookies(cookies)
                     .method(Connection.Method.POST)
                     .execute();
             Document doc = response.parse();
@@ -191,6 +193,9 @@ public class C1000Login {
 
     public void setAccountId(String accountId) {
         this.accountId = accountId;
+        if(status == STATUS_LOGGED_IN_NO_ID){
+            status = STATUS_LOGGED_IN_WITH_ID;
+        }
     }
 
     public Map<String, String> getCookies() {

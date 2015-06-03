@@ -29,6 +29,14 @@ public class AsyncLoader extends AsyncTask<WerkdagAdapter, Object, List<Werkdag>
         this.activity = activity;
     }
 
+    public void onPreExecute(){
+        TextView status = (TextView) activity.findViewById(R.id.statusView);
+        if(status != null){
+            status.setText(c1000Login.getStatusString());
+        }
+    }
+
+
     protected List<Werkdag> doInBackground(WerkdagAdapter[] params) {
         this.params = params[0];
 

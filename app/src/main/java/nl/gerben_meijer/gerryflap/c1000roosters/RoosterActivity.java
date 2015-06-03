@@ -35,9 +35,17 @@ public class RoosterActivity extends ActionBarActivity {
         adapter = new WerkdagAdapter(this);
         dagen.setAdapter(adapter);
 
-        login = new C1000Login();
-        AsyncLogin asyncLogin = new AsyncLogin(this, login);
-        asyncLogin.execute();
+        if(savedInstanceState == null || savedInstanceState.getString("session") == null) {
+            login = new C1000Login();
+            AsyncLogin asyncLogin = new AsyncLogin(this, login);
+            asyncLogin.execute();
+        } else {
+            login = new C1000Login(savedInstanceState.getString("session"));
+            login.setAccountId(savedInstanceState.getString("accountId"));
+            System.out.println(login.getSession());
+            AsyncLoader asyncLoader = new AsyncLoader(login, this);
+            asyncLoader.execute(adapter);
+        }
     }
 
 
@@ -68,11 +76,18 @@ public class RoosterActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this.getApplicationContext(), SettingsActivity.class);
             intent.putExtra("session", login.getSession());
+            intent.putExtra("accountId", login.getAccountId());
+
             startActivity(intent);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onSaveInstanceState(Bundle outState){
+        outState.putString("session", login.getSession());
+        outState.putString("accountId", login.getAccountId());
     }
 
     public WerkdagAdapter getAdapter() {
