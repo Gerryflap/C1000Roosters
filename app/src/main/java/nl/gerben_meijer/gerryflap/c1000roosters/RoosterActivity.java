@@ -36,25 +36,33 @@ public class RoosterActivity extends ActionBarActivity {
         adapter = new WerkdagAdapter(this);
         dagen.setAdapter(adapter);
 
+
         if(savedInstanceState == null || savedInstanceState.getString("session") == null) {
             login = new C1000Login();
+            login.setWerkdagList(DatabaseCommunicator.getInstance().getWerkdagList());
+            adapter.clear();
+            adapter.addAll(login.getWerkdagList());
+
             AsyncLogin asyncLogin = new AsyncLogin(this, login);
             asyncLogin.execute();
         } else {
             login = new C1000Login(savedInstanceState.getString("session"));
             login.setAccountId(savedInstanceState.getString("accountId"));
-            System.out.println(login.getSession());
-            AsyncLoader asyncLoader = new AsyncLoader(login, this);
-            asyncLoader.execute(adapter);
+            login.setWerkdagList(DatabaseCommunicator.getInstance().getWerkdagList());
+            adapter.clear();
+            adapter.addAll(login.getWerkdagList());
         }
+
     }
 
 
     public void onResume(){
         super.onResume();
-        if(login.isLoggedIn()){
-            (new AsyncLoader(login, this)).execute(adapter);
-        } else {
+        login.setWerkdagList(DatabaseCommunicator.getInstance().getWerkdagList());
+        adapter.clear();
+        adapter.addAll(login.getWerkdagList());
+
+        if(!login.isLoggedIn()){
             (new AsyncLogin(this, login)).execute();
         }
     }

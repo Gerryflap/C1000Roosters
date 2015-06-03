@@ -41,13 +41,21 @@ public class AsyncLoader extends AsyncTask<WerkdagAdapter, Object, List<Werkdag>
     protected List<Werkdag> doInBackground(WerkdagAdapter[] params) {
         this.params = params[0];
         List<Werkdag> werkdagen = c1000Login.getWeek();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7 );
-        werkdagen.addAll(c1000Login.getWeek(calendar.get(Calendar.WEEK_OF_YEAR), calendar.get(Calendar.YEAR)));
-        DatabaseCommunicator.getInstance().clear();
-        for(Werkdag werkdag: werkdagen) {
-            DatabaseCommunicator.getInstance().insertWerkdag(werkdag);
+
+        if(c1000Login.getStatus() == C1000Login.STATUS_SHEDULE_LOADED) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7);
+            werkdagen.addAll(c1000Login.getWeek(calendar.get(Calendar.WEEK_OF_YEAR), calendar.get(Calendar.YEAR)));
         }
+
+        if(c1000Login.getStatus() == C1000Login.STATUS_SHEDULE_LOADED) {
+            DatabaseCommunicator.getInstance().clear();
+            for (Werkdag werkdag : werkdagen) {
+                DatabaseCommunicator.getInstance().insertWerkdag(werkdag);
+            }
+        }
+
+        c1000Login.setWerkdagList(werkdagen);
 
         return werkdagen;
     }

@@ -10,7 +10,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".RoosterActivity"
-            android:label="Ingeplande werkdagen" >
+            android:label="C1000 Roosters" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

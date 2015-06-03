@@ -40,8 +40,8 @@ public class DatabaseCommunicator {
         values.put(DatabaseSchema.DatabaseWerkdag.COLUMN_NAME_DAG, werkdag.getDag());
         values.put(DatabaseSchema.DatabaseWerkdag.COLUMN_NAME_DATUM, werkdag.getDatum());
         values.put(DatabaseSchema.DatabaseWerkdag.COLUMN_NAME_BEGIN, werkdag.getStart());
-        values.put(DatabaseSchema.DatabaseWerkdag.COLUMN_NAME_EIND, werkdag.getDag());
-        values.put(DatabaseSchema.DatabaseWerkdag.COLUMN_NAME_PAUZE, werkdag.getDag());
+        values.put(DatabaseSchema.DatabaseWerkdag.COLUMN_NAME_EIND, werkdag.getEind());
+        values.put(DatabaseSchema.DatabaseWerkdag.COLUMN_NAME_PAUZE, werkdag.getPauze());
 
         helper.getWritableDatabase().insert(DatabaseSchema.DatabaseWerkdag.TABLE_NAME,
                  null,
@@ -60,7 +60,6 @@ public class DatabaseCommunicator {
                 null,
                 null
         );
-
         while (c.moveToNext()){
             out.add( new Werkdag(
                     c.getString(0),
@@ -70,7 +69,9 @@ public class DatabaseCommunicator {
                     c.getString(4)
             ));
         }
+        c.close();
         helper.close();
+        System.out.println(out);
         return out;
     }
 

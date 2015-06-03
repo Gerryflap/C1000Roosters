@@ -47,6 +47,7 @@ public class C1000Login {
     Map<String, String> cookies;
     private String accountId;
     private String session;
+    private List<Werkdag> werkdagList = new ArrayList<>();
     private int status = STATUS_LOGGED_OUT;
     private boolean loggedIn = false;
 
@@ -179,9 +180,10 @@ public class C1000Login {
                 }
 
             }
-
+            status = STATUS_SHEDULE_LOADED;
             return werkdagen;
         } catch (IOException e) {
+            status = STATUS_LOADING_FAILED;
             e.printStackTrace();
         }
         return null;
@@ -214,7 +216,18 @@ public class C1000Login {
         return status;
     }
 
+    public void setWerkdagList(List<Werkdag> werkdagList){
+        //Due to some referencing it might be smart to keep the same object.
+        this.werkdagList.clear();
+        this.werkdagList.addAll(werkdagList);
+        System.out.println("WDList: " + werkdagList);
+    }
+
     public String getStatusString(){
         return statusStrings.get(status);
+    }
+
+    public List<Werkdag> getWerkdagList() {
+        return werkdagList;
     }
 }
