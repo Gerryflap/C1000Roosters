@@ -15,5 +15,6 @@ public final class DatabaseSchema{
         public static final String COLUMN_NAME_BEGIN = "begin";
         public static final String COLUMN_NAME_EIND = "eind";
         public static final String COLUMN_NAME_PAUZE= "pauze";
+        public static final String COLUMN_NAME_TOTAAL= "totaal";
     }
 }

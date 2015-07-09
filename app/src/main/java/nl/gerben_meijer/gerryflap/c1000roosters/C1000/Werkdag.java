@@ -9,13 +9,15 @@ public class Werkdag {
     private String eind;
     private String pauze;
     private String dag;
+    private String totaal;
 
-    public Werkdag(String dag, String datum, String start, String eind, String pauze) {
+    public Werkdag(String dag, String datum, String start, String eind, String pauze, String totaal) {
         this.datum = datum;
         this.dag = dag;
         this.start = start;
         this.eind = eind;
         this.pauze = pauze;
+        this.totaal = totaal;
     }
 
     public String getStart() {
@@ -38,8 +40,13 @@ public class Werkdag {
         return datum;
     }
 
+    public String getTotaal() {
+        return totaal;
+    }
+
     public String toString(){
         return String.format("%s%s \nstart: %s eind: %s pauze: %s", dag, datum, start, eind, pauze);
     }
+
 
 }

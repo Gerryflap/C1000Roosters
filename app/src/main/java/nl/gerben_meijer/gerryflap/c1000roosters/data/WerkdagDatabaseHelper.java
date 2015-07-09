@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by Gerryflap on 2015-06-03.
  */
 public class WerkdagDatabaseHelper extends SQLiteOpenHelper{
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "C1000mwApp.db";
     private static final String TEXT_TYPE = " TEXT";
     private static final String COMMA_SEP = ",";
@@ -19,6 +19,7 @@ public class WerkdagDatabaseHelper extends SQLiteOpenHelper{
                     DatabaseSchema.DatabaseWerkdag.COLUMN_NAME_BEGIN + TEXT_TYPE + COMMA_SEP +
                     DatabaseSchema.DatabaseWerkdag.COLUMN_NAME_EIND + TEXT_TYPE + COMMA_SEP +
                     DatabaseSchema.DatabaseWerkdag.COLUMN_NAME_PAUZE + TEXT_TYPE + COMMA_SEP +
+                    DatabaseSchema.DatabaseWerkdag.COLUMN_NAME_TOTAAL + TEXT_TYPE + COMMA_SEP +
                     "PRIMARY KEY("+
                         DatabaseSchema.DatabaseWerkdag.COLUMN_NAME_DAG + COMMA_SEP +
                         DatabaseSchema.DatabaseWerkdag.COLUMN_NAME_DATUM + ")" +

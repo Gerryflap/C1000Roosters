@@ -145,7 +145,7 @@ public class C1000Login {
                     column = tbody.select("td");
                     try {
                         if (!column.get(0).html().equals("-") && !tbody.select("th").get(0).html().equals("Definitief")) {
-                            werkdagen.add(new Werkdag(tbody.select("th").get(0).html(), tbody.select("th").get(1).html(), column.get(0).html(), column.get(1).html(), column.get(2).html()));
+                            werkdagen.add(new Werkdag(tbody.select("th").get(0).html(), tbody.select("th").get(1).html(), column.get(0).html(), column.get(1).html(), column.get(2).html(), column.get(4).html()));
                         }
                     } catch (IndexOutOfBoundsException e) {
                         e.printStackTrace();
@@ -173,7 +173,7 @@ public class C1000Login {
                 column = tbody.select("td");
                 try {
                     if (!column.get(0).html().equals("-") && !tbody.select("th").get(0).html().equals("Definitief")) {
-                        werkdagen.add(new Werkdag(tbody.select("th").get(0).html(), tbody.select("th").get(1).html(), column.get(0).html(), column.get(1).html(), column.get(2).html()));
+                        werkdagen.add(new Werkdag(tbody.select("th").get(0).html(), tbody.select("th").get(1).html(), column.get(0).html(), column.get(1).html(), column.get(2).html(), column.get(3).html()));
                     }
                 } catch (IndexOutOfBoundsException e){
                     e.printStackTrace();
