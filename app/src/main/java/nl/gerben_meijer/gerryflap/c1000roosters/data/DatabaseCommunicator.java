@@ -3,6 +3,7 @@ package nl.gerben_meijer.gerryflap.c1000roosters.data;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,8 @@ public class DatabaseCommunicator {
             DatabaseSchema.DatabaseWerkdag.COLUMN_NAME_DATUM,
             DatabaseSchema.DatabaseWerkdag.COLUMN_NAME_BEGIN,
             DatabaseSchema.DatabaseWerkdag.COLUMN_NAME_EIND,
-            DatabaseSchema.DatabaseWerkdag.COLUMN_NAME_PAUZE
+            DatabaseSchema.DatabaseWerkdag.COLUMN_NAME_PAUZE,
+            DatabaseSchema.DatabaseWerkdag.COLUMN_NAME_TOTAAL
     };
     private static DatabaseCommunicator instance;
 
@@ -42,6 +44,7 @@ public class DatabaseCommunicator {
         values.put(DatabaseSchema.DatabaseWerkdag.COLUMN_NAME_BEGIN, werkdag.getStart());
         values.put(DatabaseSchema.DatabaseWerkdag.COLUMN_NAME_EIND, werkdag.getEind());
         values.put(DatabaseSchema.DatabaseWerkdag.COLUMN_NAME_PAUZE, werkdag.getPauze());
+        values.put(DatabaseSchema.DatabaseWerkdag.COLUMN_NAME_TOTAAL, werkdag.getTotaal());
 
         helper.getWritableDatabase().insert(DatabaseSchema.DatabaseWerkdag.TABLE_NAME,
                  null,
@@ -51,25 +54,38 @@ public class DatabaseCommunicator {
 
     public List<Werkdag> getWerkdagList(){
         List<Werkdag> out = new ArrayList<>();
-        Cursor c = helper.getReadableDatabase().query(
-                DatabaseSchema.DatabaseWerkdag.TABLE_NAME,
-                projection,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
-        while (c.moveToNext()){
-            out.add( new Werkdag(
-                    c.getString(0),
-                    c.getString(1),
-                    c.getString(2),
-                    c.getString(3),
-                    c.getString(4)
-            ));
+        try {
+            Cursor c = helper.getReadableDatabase().query(
+                    DatabaseSchema.DatabaseWerkdag.TABLE_NAME,
+                    projection,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+
+            while (c.moveToNext()){
+                try {
+                    out.add(new Werkdag(
+                            c.getString(0),
+                            c.getString(1),
+                            c.getString(2),
+                            c.getString(3),
+                            c.getString(4),
+                            c.getString(5)
+                    ));
+                } catch (IllegalStateException e){
+                    this.clear();
+                    break;
+                }
+            }
+            c.close();
+        } catch (SQLiteException e){
+            this.clear();
         }
-        c.close();
+
+
         helper.close();
         System.out.println(out);
         return out;

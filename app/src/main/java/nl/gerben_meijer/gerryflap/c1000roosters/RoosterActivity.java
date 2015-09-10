@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import nl.gerben_meijer.gerryflap.c1000roosters.C1000.C1000Login;
 import nl.gerben_meijer.gerryflap.c1000roosters.data.DatabaseCommunicator;
@@ -39,6 +40,12 @@ public class RoosterActivity extends ActionBarActivity implements SwipeRefreshLa
         } else {
             login = new C1000Login(savedInstanceState.getString("session"));
             login.setAccountId(savedInstanceState.getString("accountId"));
+
+            TextView status = (TextView) findViewById(R.id.statusView);
+            if(status != null){
+                status.setText(login.getStatusString());
+            }
+
             login.setWerkdagList(DatabaseCommunicator.getInstance().getWerkdagList());
             adapter.clear();
             adapter.addAll(login.getWerkdagList());
