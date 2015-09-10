@@ -12,6 +12,7 @@ import java.io.*;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.X509Certificate;
@@ -66,36 +67,7 @@ public class C1000Login {
 
     public C1000Login(String session){
         try {
-            TrustManagerFactory tmf = TrustManagerFactory.getInstance(
-                    TrustManagerFactory.getDefaultAlgorithm());
-// Initialise the TMF as you normally would, for example:
-            tmf.init((KeyStore) null);
-
-            TrustManager[] trustManagers = tmf.getTrustManagers();
-            final X509TrustManager origTrustmanager = (X509TrustManager) trustManagers[0];
-
-            TrustManager[] wrappedTrustManagers = new TrustManager[]{
-                    new X509TrustManager() {
-                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                            return origTrustmanager.getAcceptedIssuers();
-                        }
-
-                        public void checkClientTrusted(X509Certificate[] certs, String authType) throws CertificateException {
-                            origTrustmanager.checkClientTrusted(certs, authType);
-                        }
-
-                        public void checkServerTrusted(X509Certificate[] certs, String authType) throws CertificateException {
-                            try {
-                                origTrustmanager.checkServerTrusted(certs, authType);
-                            } catch (CertificateExpiredException e) {
-                            }
-                        }
-                    }
-            };
-
-            SSLContext sc = SSLContext.getInstance("TLS");
-            sc.init(null, wrappedTrustManagers, null);
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+            setSSL();
             cookies = new HashMap<>();
             cookies.put("pmt_real_session", session);
             this.session = session;
@@ -110,8 +82,55 @@ public class C1000Login {
         }
     }
 
-    public C1000Login(){
 
+    public C1000Login(){
+        try {
+            setSSL();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setSSL() throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException {
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(
+                TrustManagerFactory.getDefaultAlgorithm());
+// Initialise the TMF as you normally would, for example:
+        tmf.init((KeyStore) null);
+
+        TrustManager[] trustManagers = tmf.getTrustManagers();
+        final X509TrustManager origTrustmanager = (X509TrustManager) trustManagers[0];
+
+        TrustManager[] wrappedTrustManagers = new TrustManager[]{
+                new X509TrustManager() {
+                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                        return origTrustmanager.getAcceptedIssuers();
+                    }
+
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) throws CertificateException {
+                        origTrustmanager.checkClientTrusted(certs, authType);
+                    }
+
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) throws CertificateException {
+                        try {
+                            origTrustmanager.checkServerTrusted(certs, authType);
+                        } catch (java.security.cert.CertificateException e) {
+                            if (!e.getMessage().contains("expired")){
+                                throw e;
+                            } else {
+                                System.err.println("Certificate expired!");
+                            }
+                        }
+                    }
+                }
+        };
+
+        SSLContext sc = SSLContext.getInstance("TLS");
+        sc.init(null, wrappedTrustManagers, null);
+        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
     }
 
     public void login(String username, String password) {
