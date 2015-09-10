@@ -49,7 +49,7 @@ public class AsyncLoader extends AsyncTask<WerkdagAdapter, Object, List<Werkdag>
 
         if(c1000Login.getStatus() == C1000Login.STATUS_SHEDULE_LOADED) {
             Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7);
+            calendar.setTimeInMillis(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 6);
             werkdagen.addAll(c1000Login.getWeek(calendar.get(Calendar.WEEK_OF_YEAR), calendar.get(Calendar.YEAR)));
             calendar.setTimeInMillis(calendar.getTimeInMillis() + 1000 * 60 * 60 * 24 * 7);
             werkdagen.addAll(c1000Login.getWeek(calendar.get(Calendar.WEEK_OF_YEAR), calendar.get(Calendar.YEAR)));
